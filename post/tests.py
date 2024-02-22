@@ -34,16 +34,6 @@ class PostTest(TestCase):
     #     print(post)
 
     # 나이가 30 미만인 회원이 작성한 게시글 목록 조회
-    # members = Member.objects.filter(member_age__lt=30)
-    #
-    # for member in members:
-    #     posts = Post.objects.filter(member=member)
-    #     # print(member.__dict__)
-    #     for post in posts:
-    #         # 단, 회원의 이름과 회원의 나이까지 같이 조회하기
-    #         print(post.post_title, post.post_content, post.member.member_name, post.member.member_age, sep=', ')
-
-    # 나이가 30 미만인 회원이 작성한 게시글 목록 조회
     # posts = Post.objects.filter(member__member_age__lt=30, member__member_status=True).values('member__member_age',
     #                                                                                           'member__member_name',
     #                                                                                           'post_title',
@@ -62,3 +52,17 @@ class PostTest(TestCase):
 
     for post in posts:
         print(post)
+
+        # A필드에 B가 있다고 가정한다.
+        # a.b: a로 b필드에 접근하면 정방향 참조이고, b의 null상태에 따라 내부 또는 외부 조인이 실행된다.
+        # b.a: b로 a필드에 접근하면 역방향 참조이고, b의 모든 정보가 나와야하기 때문에 항상 외부 조인이 실행된다.
+
+        # EAGER(즉시)
+        # 실행하는 순간 쿼리가 실행된 뒤, 이후 쿼리가 발생하지 않는다
+        # 하나의 서비스에서 여러번 JOIN해야할 경우 사용한다.
+        posts = Post.objects.select_related('member', 'reply').values('member__member_age')
+
+        # LAZY(지연)
+        # 실행할 때 쿼리가 만들어지고 필드에 접근할 때마다 쿼리가 발생한다.
+        print(Post.objects.values('member__member_name').query)
+        print(Member.objects.values('post__post_name').query)

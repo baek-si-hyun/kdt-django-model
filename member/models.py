@@ -11,5 +11,17 @@ class Member(Period):
     # 일반 회원: True, 관리자: False
     member_status = models.BooleanField(null=False, default=True)
 
+    # 정상 회원: True, 탈퇴 회원: False
+    status = models.BooleanField(null=False, default=True)
+
     class Meta:
         db_table = 'tbl_member'
+
+
+
+
+
+
+
+
+
