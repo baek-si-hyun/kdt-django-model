@@ -14,7 +14,7 @@ class Reply(Period):
     reply_content = models.TextField(blank=False, null=False)
     member = models.ForeignKey(to=Member, on_delete=models.PROTECT)
     post = models.ForeignKey(to=Post, on_delete=models.PROTECT)
-    group_id = models.BigIntegerField(null=False, default=1)
+    group_id = models.BigIntegerField(null=True)
     reply_depth = models.BigIntegerField(null=False, default=1)
     reply_private_status = models.BooleanField(null=False, default=False, choices=PRIVATE_STATUS)
 

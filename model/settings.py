@@ -29,7 +29,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'friend'
+    'order_detail',
+    'order',
+    'cart_detail',
+    'cart',
+    'product',
+    'friend',
     'reply',
     'post',
     'member',

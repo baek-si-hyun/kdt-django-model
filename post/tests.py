@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.test import TestCase
 from random import randint
 
@@ -34,35 +35,52 @@ class PostTest(TestCase):
     #     print(post)
 
     # 나이가 30 미만인 회원이 작성한 게시글 목록 조회
-    # posts = Post.objects.filter(member__member_age__lt=30, member__member_status=True).values('member__member_age',
-    #                                                                                           'member__member_name',
-    #                                                                                           'post_title',
-    #                                                                                           'post_content',
-    #                                                                                           'created_date',
-    #                                                                                           'updated_date')
+    # 단, 회원의 이름과 회원의 나이까지 같이 조회하기
+    # 1. 정방향으로 직접 참조
+    # posts = Post.objects.filter(member__member_age__lt=30)
+    # print(posts.query)
+    # for post in posts:
+    #     print(post.pk, post.post_title, post.post_content, post.member.member_name, post.member.member_age)
+
+    # 2. 한번에 참조(member__member_name, member__member_age)
+    # posts = Post.objects.filter(member__member_age__lt=30).values(
+    #     'id',
+    #     'post_title',
+    #     'post_content',
+    #     'member__member_name',
+    #     'member__member_age'
+    # )
+    # print(posts.query)
     # for post in posts:
     #     print(post)
 
-    # 회원의 나이가 20이상 30이하인 회원이 작성한 게시글 중 post_title에 "테"가 들어가고 내용에 "7"로 끝나는 게시글 정보 조회
-    # Member는 사용하지 않고 Post만 사용해서 하기
-    # 나이 범위는 __range를 사용해서 진행
+    # A필드에 b가 있다고 가정한다.
+    # a.b: a로 b필드에 접근하면 정방향 참조이고, b의 null 상태에 따라 내부 또는 외부조인이 실행된다.
+    # b.a: b로 a필드에 접근하면 역방향 참조이고, b의 모든 정보가 나와야하기 때문에 항상 외부조인이 실행된다.
 
-    posts = Post.objects.filter(member__member_age__range=(20, 30), post_title__contains='te',
-                                post_content__endswith='7').values('member__member_age')
+    # EAGER(즉시)
+    # 실행하는 순간 쿼리가 실행된 뒤, 이후 쿼리가 발생하지 않는다.
+    # 하나의 서비스에서 여러 번 JOIN해야 할 경우 사용한다.
+    # posts = Post.objects.select_related('member', 'reply', 'category').values('id', 'post_title', 'member__member_name')
 
-    for post in posts:
-        print(post)
+    # LAZY(지연)
+    # 실행할 때 쿼리가 만들어지고 필드에 접근할 때마다 쿼리가 발생한다.
+    # print(Post.objects.values('member__member_name').query)
+    # print(Member.objects.values('post__post_title').query)
 
-        # A필드에 B가 있다고 가정한다.
-        # a.b: a로 b필드에 접근하면 정방향 참조이고, b의 null상태에 따라 내부 또는 외부 조인이 실행된다.
-        # b.a: b로 a필드에 접근하면 역방향 참조이고, b의 모든 정보가 나와야하기 때문에 항상 외부 조인이 실행된다.
+    # 게시글을 작성한 회원 중에서 게시글을 15개이상 작성한 회원 찾기
+    # posts = Post.objects.values(
+    #     'member_id',
+    #     'member__member_name',
+    #     'member__member_age',
+    #     'member__member_email') \
+    #     .annotate(member_count=Count('member_id')) \
+    #     .filter(member_count__gte=15)
+    #
+    # for post in posts:
+    #     print(post)
+    pass
 
-        # EAGER(즉시)
-        # 실행하는 순간 쿼리가 실행된 뒤, 이후 쿼리가 발생하지 않는다
-        # 하나의 서비스에서 여러번 JOIN해야할 경우 사용한다.
-        posts = Post.objects.select_related('member', 'reply').values('member__member_age')
 
-        # LAZY(지연)
-        # 실행할 때 쿼리가 만들어지고 필드에 접근할 때마다 쿼리가 발생한다.
-        print(Post.objects.values('member__member_name').query)
-        print(Member.objects.values('post__post_name').query)
+
+

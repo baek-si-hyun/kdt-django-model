@@ -1,5 +1,3 @@
-from django.test import TestCase
-
 from django.db.models import Q
 from django.test import TestCase
 
@@ -26,7 +24,7 @@ class FriendTest(TestCase):
     # sender = Member.objects.get(**data)
     #
     # data = {
-    #     'member_email': 'yuri@hanmail.net'
+    #     'member_email': 'zzanggu@naver.com'
     # }
     #
     # receiver = Member.objects.get(member_email=data['member_email'])
@@ -49,11 +47,11 @@ class FriendTest(TestCase):
 
     # 친구 목록
     # data = {
-    #     'member_email': 'yuri@hanmail.net',
-    #     'member_password': 'yyyy'
+    #     'member_email': 'zzanggu@naver.com',
+    #     'member_password': 'zzzz'
     # }
-    #
-    # # 로그인한 회원
+
+    # 로그인한 회원
     # member = Member.objects.get(**data)
 
     # 친구 요청을 보냈거나 받은 목록에서
@@ -65,6 +63,7 @@ class FriendTest(TestCase):
     # 친구 수락이 된 정보 모두 조회
     # friends = Friend.friends_objects.filter_member(member, status=True)
     # for friend in friends:
+    #     Friend.objects.filter(id=friend.id).update(status=-1)
     #     print(friend.friend)
     #############################################################################
 
@@ -99,8 +98,8 @@ class FriendTest(TestCase):
 
     # 친구 수락
     # data = {
-    #     'member_email': 'yuri@hanmail.net',
-    #     'member_password': 'yyyy'
+    #     'member_email': 'zzanggu@naver.com',
+    #     'member_password': 'zzzz'
     # }
     #
     # receiver = Member.objects.get(**data)

@@ -1,5 +1,5 @@
 from django.db import connection
-from django.db.models import Q, Count, Model, F
+from django.db.models import Q, Count, Model, F, ProtectedError, Max, Min
 from django.test import TestCase
 
 from member.models import Member
@@ -29,13 +29,14 @@ class MemberTest(TestCase):
     #     )
     #
     #     print(member.__dict__)
-
+    
     # 회원 1명 추가
     # Member.objects.create()
 
     # 회원 2명 추가
     # for i in range(2):
     #     Member.objects.create()
+
 
     # save
     # datas = {
@@ -46,7 +47,7 @@ class MemberTest(TestCase):
     # }
     # member = Member(**datas)
     # member.save()
-
+    
     # 회원 1명 추가
     # datas = {}
     # member = Member(**datas)
@@ -280,6 +281,12 @@ class MemberTest(TestCase):
     # for member in member_queryset:
     #     print(member.__dict__)
 
+    # aggregate
+    # annotate()는 QuerySet객체로 리턴하기 때문에 뒤에 이어서 추가 작업이 가능하지만,
+    # aggregate()는 전체 대상이므로 뒤에 이어서 추가 작업이 불가능하다.
+    member = Member.objects.aggregate(max_age=Max('member_age'), min_age=Min('member_age'))
+    print(member['max_age'], member['min_age'])
+
     # save
     # 회원 이름 수정
     data = {
@@ -302,3 +309,11 @@ class MemberTest(TestCase):
     # 나이가 20살 이하인 회원의 나이를 +1한다.
     # count = Member.objects.filter(member_age__lte=20).update(member_age=F('member_age') + 1)
     # print(count)
+
+
+    # delete
+    # try:
+    #     count = Member.objects.get(id=26).delete()
+    #     print(count)
+    # except ProtectedError:
+    #     print('ProtectedError')
