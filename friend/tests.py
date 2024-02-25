@@ -66,13 +66,15 @@ class FriendTest(TestCase):
 
     ############################################################################
     # 친구 수락이 된 정보 모두 조회
+    # 매니저를 통해 만든 새로운 QuerySet이 friends에 담긴다.
     friends = Friend.friends_objects.filter_member(member, status=True)
-
+    # 모든 조건을 만족한 QuerySet들이 friends에 담긴다.
     for friend in friends:
+        #friends를 순회하면서 id값이 일치한 Friend 객체들의 status를 -1로 업데이트한다.
         Friend.objects.filter(id=friend.id).update(status=-1)
         print(friend.friend)
     ############################################################################
-
+    # 이전에 만든 조건인 condition과 status가 Ture이 Friend객체들을 가져온다.
     members = Friend.enabled_objects.filter(condition, status=True)
     friends = []
     for friend in members:
