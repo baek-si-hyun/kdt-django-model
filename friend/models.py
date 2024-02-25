@@ -1,20 +1,8 @@
 from django.db import models
-from django.db.models import Q, F
 
+from friend.managers import FriendManager
 from member.models import Member
 from model.models import Period
-
-
-class FriendManager(models.Manager):
-    def filter_member(self, member, **kwargs):
-        condition_sender = Q(sender=member)
-        condition_receiver = Q(receiver=member)
-
-        friends_receiver = super().get_queryset().annotate(friend=F('receiver')).filter(condition_sender, **kwargs)
-        friends_sender = super().get_queryset().annotate(friend=F('sender')).filter(condition_receiver, **kwargs)
-
-        friends = friends_sender.union(friends_receiver)
-        return friends
 
 
 class Friend(Period):

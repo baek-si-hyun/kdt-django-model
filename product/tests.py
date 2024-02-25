@@ -1,5 +1,6 @@
 import datetime
 import math
+import random
 
 from django.db.models import F
 from django.db.models.functions import Floor
@@ -34,12 +35,3 @@ class ProductTestCase(TestCase):
     # count = Product.objects.filter(id=3).update(product_price=25000, updated_date=timezone.now())
     # print(count)
     pass
-
-
-
-
-
-
-
-
-
