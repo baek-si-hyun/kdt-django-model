@@ -27,7 +27,7 @@ class ProductTestCase(TestCase):
 
     # 상품 할인율 적용 가격
     products = Product.enabled_objects.all().annotate(
-        # F()로 데이터베이스의 해당 칼럼에 접근해 값을 가져오고 할인률을 적용시켜 Floor로 실수타입으로 바꾼다.
+        # F()로 데이터베이스의 해당 칼럼에 접근해 값을 가져오고 할인율을 적용시켜 Floor로 실수타입으로 바꾼다.
         product_sell_price=Floor(F('product_price') * (1 - F('product_discount') / 100) / 10) * 10)
     for product in products:
         print(product.product_price, product.product_discount, product.product_sell_price)
